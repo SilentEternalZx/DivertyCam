@@ -1,0 +1,16 @@
+{
+  "name": "apidivertycam",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "a"
+  },
+  "author": "Julián López",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.5.3"
+  }
+}
