@@ -1,24 +1,26 @@
-const Permiso = require('../models/permiso')
+import Permiso from '../models/permiso.js'
 
 //Método Get
-const getPermiso= async(req,res)=>{
+export async function getPermiso (req,res){
     const permisos= await Permiso.find()
 
-    res.json(permisos)
+    res.json({permisos})
 
 }
 
 
 
+
 // Método Post
-const postPermiso = async (req, res) => {
+export async function postPermiso (req, res)  {
     let msg = 'Permiso insertado'
+    
     const body = req.body
     
     try {
               
         const permiso = new Permiso(body)
-        await permiso.save() // Guardar en la base de datos el empleado
+        await permiso.save() // Guardar en la base de datos el permiso
 
     
         
@@ -32,37 +34,47 @@ const postPermiso = async (req, res) => {
 
 //Método PUT
 
-const putPermiso=async(req,res)=>{
-    const {permiso_id,estado_permiso}=req.body
-    let msg='Permiso actualizado'
-    try{
-        await Permiso.findOneAndUpdate({permiso_id},{estado_permiso})
+export async function putPermiso(req, res) {
+    const { _id, nombre_permiso, estado_permiso } = req.body
+    let msg = 'Permiso actualizado'
+    try {
         
-    
-} catch(error){
- msg=error
-}
-res.json({msg:msg})
+        const updateData = {};
+        
+        if (nombre_permiso !== undefined) updateData.nombre_permiso = nombre_permiso;
+        if (estado_permiso !== undefined) updateData.estado_permiso = estado_permiso;
+
+        await Permiso.findByIdAndUpdate(_id, updateData, {new:true}) 
+        
+    } catch(error) {
+        msg = error.message
+    }
+    res.json({ msg: msg })
 }
 
 //Método DELETE
 
-const deletePermiso=async (req,res)=>{
+export async function deletePermiso (req,res){
     let msg='Permiso borrado'
-    permiso_id=req.params.permiso_id
+      const id=req.params.id
     try{
-        await Permiso.findByIdAndDelete({_id:permiso_id})
+
+       const permisoBorrado = await Permiso.findByIdAndDelete({_id:id})
+       
+
+       if(!permisoBorrado){
+        msg='Permiso no encontrado'
+        return res.status(404).json({msg:msg})
+       }
+
+
+
     } catch (error) {
-        msg='Hubo un problema al borrar'
+        msg=error.message
+        return res.status(500).json({msg:msg})
 
     }
     res.json({msg:msg})
 }
 
 
-module.exports = {
-    getPermiso,
-    postPermiso,
-    putPermiso,
-    deletePermiso
-}

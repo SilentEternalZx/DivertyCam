@@ -1,8 +1,11 @@
-const express= require('express')
-const dbConnect=require('../database/config')
-require('../database/config')
-const {getPermiso,postPermiso,putPermiso,deletePermiso}=require('../controllers/permisoController')
-
+import express, { json } from 'express'
+import dbConnect from '../database/config.js'
+import '../database/config.js'
+import permisoRouter from '../routes/permisoRoute.js'
+import privilegioRouter from '../routes/privilegioRoute.js'
+import autRouter from '../routes/aut.Route.js'
+import usuarioRouter from '../routes/usuarioRoute.js'
+import cors from 'cors'
 
 class Server{
     constructor(){
@@ -10,6 +13,8 @@ class Server{
         this.listen()
         this.dbConnection()
         this.pathPermiso='/api/permiso'
+        this.pathPrivilegio='/api/privilegio'
+        this.pathUsuario='/api/usuario'
         this.route()
         
         
@@ -20,13 +25,14 @@ class Server{
     }
 
     route(){
-        this.app.use(express.json()) //Parsear datos
-        this.app.get(this.pathPermiso, getPermiso)
-        this.app.post(this.pathPermiso, postPermiso)
-        this.app.put(this.pathPermiso, putPermiso)
-        this.app.delete(this.pathPermiso+'/:permiso_id', deletePermiso)
-       
+        this.app.use(json()) //Parsear datos
+        this.app.use(cors())
+        this.app.use(this.pathPermiso, permisoRouter)
+        this.app.use(this.pathPrivilegio, privilegioRouter)
+        this.app.use(this.pathUsuario, usuarioRouter)
+        this.app.use('/iniciarsesion',autRouter)
     }
+    
     listen(){
         this.app.listen(process.env.PORT,()=>{
             console.log('Server running')
@@ -34,4 +40,4 @@ class Server{
     }
 }
 
-module.exports= Server //Exports the class server
+export default Server //Exports the class server
