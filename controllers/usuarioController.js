@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs'
+// import bcrypt from 'bcryptjs'
 import Usuario from '../models/usuario.js' 
 import generateJWT from '../helpers/generateJWT.js'
 
@@ -41,11 +41,11 @@ export async function iniciarSesion(req,res) {
         
         }
         else{
-            const usuarioLogueado= await bcrypt.compare(contrasena, usuario.contrasena) //Comparar contraseñas
+            const usuarioLogueado= await (contrasena, usuario.contrasena) //Comparar contraseñas
             if(usuarioLogueado){
                 
-                const token=await generateJWT(usuario)
-                res.cookie('token',token)
+                // const token=await generateJWT(usuario)
+                // res.cookie('token',token)
                 res.status(200).json({
                     exitoso:true,
                     msg:'Sesión iniciada con éxito'}) //Generate a token
